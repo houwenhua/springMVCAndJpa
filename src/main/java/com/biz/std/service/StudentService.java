@@ -51,8 +51,16 @@ public class StudentService {
 	}
 
 	@Transactional
-	public void saveStudent(Student student) {
-		studentRepository.save(student);
+	public String saveStudent(Student student) {
+		Student stu = studentRepository.findByStudentNumber(student.getNumber());
+		//如果学号number已经存在就返回2
+		if(stu == null){
+			studentRepository.save(student);
+			return "1";
+		} else {
+			return "2";
+		}
+		
 	}
 
 	@Transactional

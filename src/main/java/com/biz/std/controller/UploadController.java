@@ -15,6 +15,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,7 +75,7 @@ public class UploadController {
             } else {
             	// 获取文件名
     			String fileName = item.getName();
-    			if (fileName != null) {
+    			if (StringUtils.isNotEmpty(fileName)) {
     				// 获得最后一个/的位置
     				int index = fileName.lastIndexOf("/") + 1;
     				// 获得真实文件名

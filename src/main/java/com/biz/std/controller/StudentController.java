@@ -55,9 +55,9 @@ public class StudentController {
 	public void saveStudent(HttpServletResponse resp,String number,String name,String picture,String sex,String birthday) throws IOException, ParseException{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Student student = new Student(number, name, picture, sex, sdf.parse(birthday));
-		studentService.saveStudent(student);
+		String flag = studentService.saveStudent(student);
 		resp.setContentType("text/html;charset=utf-8");
-		resp.getWriter().print("1");
+		resp.getWriter().print(flag);
 	}
 	
 	/**

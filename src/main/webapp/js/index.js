@@ -179,7 +179,7 @@ $(function(){
 						$("#datagrid").datagrid('loading');
 					},
 					success:function(data){
-						if(data){
+						if(data==1){
 							$("#datagrid").datagrid('loaded');
 							$("#datagrid").datagrid('load');
 							$("#datagrid").datagrid('unselectAll');
@@ -187,6 +187,11 @@ $(function(){
 								title:'提示',
 								msg:'插入成功了'+data,
 							});
+						}else{
+							$("#datagrid").datagrid('loaded');
+							$("#datagrid").datagrid('load');
+							$("#datagrid").datagrid('unselectAll');
+							$.messager.alert('系统提示', '该学号已经存在！！！', 'info');
 						}
 					}
 				});
