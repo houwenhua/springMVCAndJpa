@@ -1,6 +1,8 @@
 package com.biz.std.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletResponse;
@@ -39,34 +41,38 @@ public class StudentController {
 	 * */
 	@RequestMapping("/studentlist.do")
 	public void getStudentList(HttpServletResponse resp,int page,int rows) throws IOException{
-		System.out.println(page);
-		System.out.println(rows);
-		//model.addAttribute("studentList",OBJECT_MAPPER.writeValueAsString(studentService.findAllStudents()));
-		/*for (Student employee : studentService.findAllStudents()) {
-            System.out.println("id:" + employee.getId()
-                    + " , name:" + employee.getName());
-        }*/
 		resp.setContentType("text/html;charset=utf-8");
 		resp.getWriter().print(OBJECT_MAPPER.writeValueAsString(studentService.findAllStudents(page,rows)));
-		//return "list";
 	}
 	
 	/**
 	 * 插入新数据
+	 * @throws IOException 
+	 * @throws ParseException 
 	 * 
 	 * */
 	@RequestMapping("/studentsave.do")
-	public void saveStudent(Student student){
+	public void saveStudent(HttpServletResponse resp,String number,String name,String picture,String sex,String birthday) throws IOException, ParseException{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Student student = new Student(number, name, picture, sex, sdf.parse(birthday));
 		studentService.saveStudent(student);
+		resp.setContentType("text/html;charset=utf-8");
+		resp.getWriter().print("1");
 	}
 	
 	/**
 	 * 更新数据
+	 * @throws IOException 
+	 * @throws ParseException 
 	 * 
 	 * */
 	@RequestMapping("/studentupdate.do")
-	public void updateStudent(Student student){
-		studentService.updateStudent(student);
+	public void updateStudent(HttpServletResponse resp,Integer id,String number,String name,String picture,String sex,String birthday) throws IOException, ParseException{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Student stu = new Student(id, number, name, picture, sex, sdf.parse(birthday));
+		studentService.updateStudent(stu);
+		resp.setContentType("text/html;charset=utf-8");
+		resp.getWriter().print("1");
 	}
 	
 	/**

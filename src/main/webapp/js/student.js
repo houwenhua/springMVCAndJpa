@@ -1,67 +1,244 @@
 $(function(){
-jQuery("#grid-table").jqGrid({  
-        subGrid : false, // 此处设置为true时可以打开子项,子项用不到已删除  
-        url : "",// 获取数据的地址  
-        rownumbers : true,   
-        datatype : "json",  
-        mtype : "POST",  
-        hidegrid : false,//收缩列表按钮  
-        prmNames : {  
-            page : "pageNumInput",  
-            rows : "pageSize"  
-        },// 重新定义分页信息  
-        height : 385, // 表格高度  
-        colNames : ['手机号', '意见内容','提交时间'],  
-        colModel : [ {  
-            name : 'phone',  
-            index : 'phone',  
-            width : 100,  
-            editable : true,  
-        }, {  
-            name : 'idea',  
-            index : 'idea',  
-            width : 120,  
-            editable : false,  
-        }, {  
-            name : 'timestamp',  
-            index : 'timestamp',  
-            width : 120,  
-            editable : false,  
-        }],  
-        viewrecords : true,  
-        rowNum : 20,  
-        rowList : [20, 50, 100,200],  
-        pager : pager_selector,  
-        altRows : true,  
-        multiselect : false,  
-        multiboxonly : true,  
-        emptyrecords : "无数据",  
-        loadComplete : function(data) {  
-            var table = this;  
-            setTimeout(function() {  
-                styleCheckbox(table);  
-                updateActionIcons(table);  
-                updatePagerIcons(table);  
-                enableTooltips(table);  
-            }, 0);  
-            if (data.status == "success") {  
-                $("#alert_success").show();  
-                setTimeout(function() {  
-                    $("#alert_success").hide();  
-                }, 1000);  
-            }  
-  
-  
-        },  
-        jsonReader : { // jsonReader来跟服务器端返回的数据做对应  
-            root : "dataRows", // 包含实际数据的数组  
-            page : "currPage", // 当前页  
-            total : "totalPage",// 总页数  
-            records : "totalCount", // 查询出的记录数  
-            id : "id",  
-            repeatitems : false  
-        },  
-        editurl : "",// nothing is saved  
-        caption : ""  
-    });  
+
+	obj = {
+			editRow:undefined,
+			//添加一行
+			add:function(){
+				$("#save,#redo").show();
+				if(this.editRow==undefined){
+					$("#datagrid").datagrid('insertRow',{
+						index:0,
+						row:{
+							
+						}
+					});
+					//将第一行设置为可编辑状态
+					$("#datagrid").datagrid('beginEdit',0);
+					this.editRow = 0; 
+				}
+			},
+			save:function(){
+				//将第一行设为结束编辑
+				$("#datagrid").datagrid('endEdit',this.editRow);
+			},
+			redo:function(){
+				this.editRow = undefined;
+				$("#save,#redo").hide();
+				$("#datagrid").datagrid('rejectChanges');
+			},
+			edit:function(){
+				var rows = $("#datagrid").datagrid('getSelections');
+				if(rows.length == 1){
+					if(this.editRow!=undefined){
+						$("#datagrid").datagrid('endEdit',this.editRow);
+					}
+					
+					if(undefined==this.editRow){
+						var index = $("#datagrid").datagrid('getRowIndex',rows[0]);
+						$("#save,#redo").show();
+						$("#datagrid").datagrid('beginEdit',index);
+						this.editRow = index;
+						$("#datagrid").datagrid('unselectRow',index);
+					}
+				}else{
+					$.messager.alert('警告','修改必须选中一行且只能选中一行','warning');
+				}
+				
+			},
+			remove:function(){
+				var rows = $("#datagrid").datagrid('getSelections');
+				if(rows.length>0){
+					$.messager.confirm('提示','您确定删除这些记录吗？',function(flag){
+						if(flag){
+							var ids = [];
+							for(var i = 0;i<rows.length;i++){
+								ids.push(rows[i].id);
+							}
+							$.ajax({
+								type:'post',
+								url:'gradedelete.do',
+								data:{
+									ids:ids.join(','),
+								},
+								beforeSend:function(){
+									$("#datagrid").datagrid('loading');
+								},
+								success:function(data){
+									if(data){
+										$("#datagrid").datagrid('loaded');
+										$("#datagrid").datagrid('load');
+										$("#datagrid").datagrid('unselectAll');
+										$.messager.show({
+											title:'提示',
+											msg:'删除成功了'+data,
+										});
+									}
+								}
+							});
+						}
+					});
+				}else{
+					$.messager.alert('提示','请选择你要删除的记录','info');
+				}
+			},
+			image:function(){
+				var rows = $("#datagrid").datagrid('getSelections');
+				if(rows.length == 1){
+					var jq = top.jQuery;    
+					var url = 'serviceimageupload.jsp?id='+rows[0].id;
+					window.location.href = url;
+				}else{
+					$.messager.alert('警告','修改必须选中一行且只能选中一行','warning');
+				}
+				
+			}
+			
+		};
+	$("#datagrid").datagrid({
+		width:700,
+		fit:true,
+		url:'studentlist.do',
+		title:'学生信息',
+		striped:true,
+		rownumbers:true,
+		fitColumns:true,
+		columns:[[
+			{
+				field:'id',
+				title:'编号',
+				width:100,
+				checkbox:true,
+			},
+			{
+				field:'picture',
+				title:'图片',
+				width:100,
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true,
+					},
+				}
+			},
+			{
+				field:'number',
+				title:'学号',
+				width:100,
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true,
+					},
+				}
+			},
+			{
+				field:'name',
+				title:'学生姓名',
+				width:100,
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true,
+					},
+				}
+			},
+			{
+				field:'sex',
+				title:'性别',
+				width:100,
+				editor:{
+					type:'validatebox',
+					options:{
+						required:true,
+					},
+				}
+			},
+			{
+				field:'birthday',
+				title:'出生日期',
+				width:100,
+				editor:{
+					type:'datebox',
+					options:{
+						required:true,
+					},
+				}
+			},
+		]],
+		toolbar:'#tb',
+		pagination:true,
+		pagePosition:'bottom',
+		onAfterEdit:function(rowIndex,rowData,changes){
+			obj.editRow = undefined;
+			$("#save,#redo").hide();
+			
+			var inserted = $("#datagrid").datagrid('getChanges','inserted');
+			var updated = $("#datagrid").datagrid('getChanges','updated');
+			//执行新增的方法
+			if(inserted.length>0){
+				$.ajax({
+					type:'post',
+					url:'studentsave.do',
+					data:{
+						number:inserted[0].number,
+						gradename:inserted[0].gradename,
+						count:inserted[0].count,
+						avg:inserted[0].avg,
+					},
+					beforeSend:function(){
+						$("#datagrid").datagrid('loading');
+					},
+					success:function(data){
+						if(data){
+							$("#datagrid").datagrid('loaded');
+							$("#datagrid").datagrid('load');
+							$("#datagrid").datagrid('unselectAll');
+							$.messager.show({
+								title:'提示',
+								msg:'插入成功了'+data,
+							});
+						}
+					}
+				});
+			};
+			//执行修改的方法
+			if(updated.length>0){
+				$.ajax({
+					type:'post',
+					url:'gradeupdate.do',
+					data:{
+						id:updated[0].id,
+						number:updated[0].number,
+						gradename:updated[0].gradename,
+						count:updated[0].count,
+						avg:updated[0].avg,
+					},
+					beforeSend:function(){
+						$("#datagrid").datagrid('loading');
+					},
+					success:function(data){
+						if(data){
+							$("#datagrid").datagrid('loaded');
+							$("#datagrid").datagrid('load');
+							$("#datagrid").datagrid('unselectAll');
+							$.messager.show({
+								title:'提示',
+								msg:'修改成功了'+data,
+							});
+						}
+					}
+				});
+			}
+		},
+		onDblClickRow:function(rowIndex,rowdata){
+			
+		},
+		onRowContextMenu:function(e,rowIndex,rowData){
+			e.preventDefault();
+			$("#menu").menu('show',{
+				top:e.pageY,
+				left:e.pageX,
+			})
+		}
+	});
 })

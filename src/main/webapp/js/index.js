@@ -110,22 +110,11 @@ $(function(){
 				checkbox:true,
 			},
 			{
-				field:'picture',
-				title:'图片',
-				width:100,
-				editor:{
-					type:'validatebox',
-					options:{
-						required:true,
-					},
-				}
-			},
-			{
 				field:'number',
 				title:'学号',
 				width:100,
 				editor:{
-					type:'validatebox',
+					type:'numberbox',
 					options:{
 						required:true,
 					},
@@ -147,7 +136,7 @@ $(function(){
 				title:'性别',
 				width:100,
 				editor:{
-					type:'numberbox',
+					type:'validatebox',
 					options:{
 						required:true,
 					},
@@ -180,10 +169,11 @@ $(function(){
 					type:'post',
 					url:'studentsave.do',
 					data:{
+						number:inserted[0].number,
 						name:inserted[0].name,
+						sex:inserted[0].sex,
 						birthday:inserted[0].birthday,
-						description:inserted[0].description,
-						avgscore:inserted[0].avgscore,
+						picture:'default.jpg',
 					},
 					beforeSend:function(){
 						$("#datagrid").datagrid('loading');
@@ -208,10 +198,11 @@ $(function(){
 					url:'studentupdate.do',
 					data:{
 						id:updated[0].id,
+						number:updated[0].number,
 						name:updated[0].name,
+						sex:updated[0].sex,
 						birthday:updated[0].birthday,
-						description:updated[0].description,
-						avgscore:updated[0].avgscore,
+						picture:updated[0].picture,
 					},
 					beforeSend:function(){
 						$("#datagrid").datagrid('loading');
@@ -239,6 +230,18 @@ $(function(){
 				top:e.pageY,
 				left:e.pageX,
 			})
-		}
+		},
+		view: detailview,
+		detailFormatter: function(rowIndex, rowData){
+			return '<table><tr>' +
+					'<td rowspan=2 style="border:0"><img src="' + rowData.picture + '" style="height:50px;"></td>' +
+					'<td style="border:0">' +
+					'<p>学号: ' + rowData.number + '</p>' +
+					'<p>姓名: ' + rowData.name + '</p>' +
+					'<p>性别: ' + rowData.sex + '</p>' +
+					'<p>出生日期: ' + rowData.birthday + '</p>' +
+					'</td>' +
+					'</tr></table>';
+		},
 	});
 })

@@ -51,16 +51,16 @@
 	</bean>
 	
 	<!-- 上传必须配置 不然转换会报错 -->
-	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<!-- <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="defaultEncoding">
 			<value>UTF-8</value>
 		</property>
 		<property name="maxUploadSize">
-			<value>32505856</value><!-- 上传文件大小限制为31M，31*1024*1024 -->
+			<value>32505856</value>上传文件大小限制为31M，31*1024*1024
 		</property>
 		<property name="maxInMemorySize">
 			<value>4096</value>
 		</property>
-	</bean>
+	</bean> -->
 	
 </beans> 

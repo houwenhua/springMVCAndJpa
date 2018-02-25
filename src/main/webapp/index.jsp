@@ -38,5 +38,6 @@
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="js/datagrid-detailview.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 </html>

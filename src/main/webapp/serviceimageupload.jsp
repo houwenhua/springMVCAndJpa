@@ -58,7 +58,7 @@
 			return false;
 		}
 		$('#ff').form('submit',{
-			url:'${pageContext.request.contextPath}/UploadTo',
+			url:'uploadimage.do',
 			onSubmit:function(param){
 				$.messager.progress({
 					text:'正在上传.....'
@@ -70,8 +70,8 @@
 				if(data!=444){
 					data=data.replace(/amp;/g,"");
 					$.messager.progress('close');
-					$.messager.alert('系统提示', '上传成功！！！确定后打开上传图片', 'info', function(){
-						window.location.href = data;
+					$.messager.alert('系统提示', '上传成功！！！确定后返回', 'info', function(){
+						window.location.href = "http://localhost:8088/springMVCAndJpa/index.jsp";
 					 });
 				}else{
 					 $.messager.alert('系统提示', '上传失败', 'error');

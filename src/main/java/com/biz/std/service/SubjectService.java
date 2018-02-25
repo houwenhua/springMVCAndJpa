@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.biz.std.model.Pagination;
 import com.biz.std.model.Subject;
@@ -27,10 +28,12 @@ public class SubjectService {
 		return pagination;
 	}
 
+	@Transactional
 	public void saveSubject(Subject subject) {
 		subjectRepository.save(subject);
 	}
 
+	@Transactional
 	public void updateSubject(Subject subject) {
 		Subject subtemp = subjectRepository.findOne(subject.getId());
 		subtemp.setSubjectname(subject.getSubjectname());
@@ -39,6 +42,7 @@ public class SubjectService {
 		subjectRepository.saveAndFlush(subtemp);
 	}
 
+	@Transactional
 	public void deleteSubject(String[] ids) {
 		for(String id : ids){
 			subjectRepository.delete(Integer.parseInt(id));
