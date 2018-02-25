@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Student {
@@ -17,6 +18,19 @@ public class Student {
 	private String picture;
 	private String sex;
 	private Date birthday;
+	public Student() {
+		super();
+	}
+
+	public Student(String number, String name, String picture, String sex, Date birthday) {
+		super();
+		this.number = number;
+		this.name = name;
+		this.picture = picture;
+		this.sex = sex;
+		this.birthday = birthday;
+	}
+
 	public Student(Integer id, String number, String name, String picture, String sex, Date birthday) {
 		super();
 		this.id = id;
@@ -26,7 +40,7 @@ public class Student {
 		this.sex = sex;
 		this.birthday = birthday;
 	}
-	
+
 	@GeneratedValue
 	@Id
 	public Integer getId() {
@@ -62,7 +76,15 @@ public class Student {
 	public Date getBirthday() {
 		return birthday;
 	}
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
 	}
+
+	@Override
+	public String toString() {
+		return "Student [id=" + id + ", number=" + number + ", name=" + name + ", picture=" + picture + ", sex=" + sex
+				+ ", birthday=" + birthday + "]";
+	}
+	
 }

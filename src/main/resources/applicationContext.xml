@@ -55,8 +55,15 @@
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <!--5 配置spring data-->
-    <jpa:repositories base-package="com.imooc" entity-manager-factory-ref="entityManagerFactory"/>
+    <jpa:repositories base-package="com.biz.std" entity-manager-factory-ref="entityManagerFactory"/>
 
-    <context:component-scan base-package="com.biz.std"/>
+    <!-- 启动spring的注解功能 -->
+	<context:annotation-config />
+	<!--激活spring的自动扫描功能 -->
+	<context:component-scan base-package="com.biz.std">
+		 <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		 <context:exclude-filter type="annotation" 
+			expression="org.springframework.web.bind.annotation.ControllerAdvice"/> 
+	</context:component-scan> 
 
 </beans>
