@@ -136,9 +136,17 @@ $(function(){
 				title:'性别',
 				width:100,
 				editor:{
-					type:'validatebox',
+					type:'combobox',
 					options:{
+						data:[
+							{sex:'男',text:'男'},
+							{sex:'女',text:'女'}
+						],
+						editable: false,
 						required:true,
+						valueField: "sex",
+                        textField: "text",
+                        
 					},
 				}
 			},
@@ -150,6 +158,7 @@ $(function(){
 					type:'datebox',
 					options:{
 						required:true,
+						editable: false,
 					},
 				}
 			},
@@ -239,7 +248,7 @@ $(function(){
 		view: detailview,
 		detailFormatter: function(rowIndex, rowData){
 			return '<table><tr>' +
-					'<td rowspan=2 style="border:0"><img src="' + rowData.picture + '" style="height:50px;"></td>' +
+					'<td rowspan=2 style="border:0"><img src="' + rowData.picture + '" style="width:200px;"></td>' +
 					'<td style="border:0">' +
 					'<p>学号: ' + rowData.number + '</p>' +
 					'<p>姓名: ' + rowData.name + '</p>' +
